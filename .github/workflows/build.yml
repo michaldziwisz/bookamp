@@ -43,6 +43,7 @@ jobs:
         run: |
           cmake -S third_party\bungee -B third_party\bungee\build_x86 -A Win32 -T v143 ^
             -DBUNGEE_BUILD_SHARED_LIBRARY=OFF ^
+            -DCMAKE_C_FLAGS="/D_USE_MATH_DEFINES" -DCMAKE_CXX_FLAGS="/D_USE_MATH_DEFINES" ^
             -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
           cmake --build third_party\bungee\build_x86 --config Release --target bungee_library -j
 
