@@ -25,15 +25,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Add MSVC (x86) to PATH
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x86
-
+      # UWAGA: kroki cmake buduja przez generator "Visual Studio 17 2022", ktory
+      # sam odnajduje toolchain. NIE wstrzykujemy tu srodowiska msvc-dev-cmd —
+      # jego zmienne (INCLUDE/CL/LIB dla x86) psuly kompilacje C++ Bungee.
       - name: Build SoundTouch (static, x86, /MT)
         shell: cmd
         run: |
-          cmake -S third_party\soundtouch -B third_party\soundtouch\build_x86 -A Win32 -T v143 ^
+          cmake -S third_party\soundtouch -B third_party\soundtouch\build_x86 -G "Visual Studio 17 2022" -A Win32 -T v143 ^
             -DBUILD_SHARED_LIBS=OFF -DINTEGER_SAMPLES=OFF -DSOUNDSTRETCH=OFF -DSOUNDTOUCH_DLL=OFF ^
             -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
           cmake --build third_party\soundtouch\build_x86 --config Release -j
@@ -41,11 +39,17 @@ jobs:
       - name: Build Bungee (static, x86, /MT)
         shell: cmd
         run: |
-          cmake -S third_party\bungee -B third_party\bungee\build_x86 -A Win32 -T v143 ^
+          cmake -S third_party\bungee -B third_party\bungee\build_x86 -G "Visual Studio 17 2022" -A Win32 -T v143 ^
             -DBUNGEE_BUILD_SHARED_LIBRARY=OFF ^
             -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /D_USE_MATH_DEFINES" ^
             -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
           cmake --build third_party\bungee\build_x86 --config Release --target bungee_library -j
+
+      # Gole cl/rc/link potrzebuja srodowiska x86 -> dopiero teraz.
+      - name: Add MSVC (x86) to PATH
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
 
       - name: Build plugin (dsp_bookamp.dll)
         shell: cmd
