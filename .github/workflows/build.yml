@@ -36,6 +36,12 @@ jobs:
             -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
           cmake --build third_party\soundtouch\build_x86 --config Release -j
 
+      - name: Patch Bungee for MSVC
+        shell: cmd
+        run: |
+          cd third_party\bungee
+          git apply --verbose ..\..\patches\bungee-msvc.patch
+
       - name: Build Bungee (static, x86, /MT)
         shell: cmd
         run: |

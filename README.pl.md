@@ -129,6 +129,9 @@ cd bookamp
 Następnie z „x86 Native Tools Command Prompt for VS 2022":
 
 ```
+REM 0) nałóż łatkę zgodności z MSVC na Bungee (upstream celuje w GCC/Clang)
+cd third_party\bungee && git apply ..\..\patches\bungee-msvc.patch && cd ..\..
+
 REM 1) zbuduj biblioteki third-party (x86, /MT)
 third_party\_build_soundtouch.bat
 third_party\_build_bungee.bat
