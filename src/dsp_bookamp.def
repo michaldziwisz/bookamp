@@ -1,0 +1,3 @@
+LIBRARY dsp_bookamp
+EXPORTS
+    winampDSPGetHeader2
